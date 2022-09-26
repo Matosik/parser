@@ -4,9 +4,9 @@ import os
 from time import sleep
 import random as rand
 import cv2
-from selenium import webdriver
+#from selenium import webdriver
 
-
+                        
 headers = {"Accept": "*/*","User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"}
 
 id=0
@@ -18,7 +18,7 @@ def rewrite (id,diry):
 
 def items_pars(counter, id, obj,directory ):
     page=0
-
+    a=0.456
     while(counter>0):
         print('Страница === ',page)
         url=f"https://yandex.ru/images/search?p={page}&text={obj}"
@@ -33,7 +33,8 @@ def items_pars(counter, id, obj,directory ):
             locale_counter=0
             for i in range(min(len(img_url),counter)):
                 img="https:"+ img_url[i].get("src")
-                sleep(2)
+                sleep(a)
+                a+=0.001
                 img_d=requests.get(img).content
                 with open(f'dataset/{directory}/{id}.jpg', "wb") as file:
                     file.write(img_d)
@@ -44,12 +45,16 @@ def items_pars(counter, id, obj,directory ):
             counter-=locale_counter
         else:
             print("Вылетела капча")
-            sleep(30)
+            sleep(12)
             page+=2
             
     return "УРА"
 query=input("Введите запрос: ")
-diry= input(f"Папка для картинок с запросом'{query}': ")
+diry= input(f"название папки для картинок с запросом'{query}': ")
 counter_imgg=1100
+if(os.path.exists("dataset")):
+  print("ok file ")
+else:
+  os.mkdir("dataset")
 os.makedirs(f"dataset/{diry}")
 print(items_pars(counter_imgg,id,query,diry))
